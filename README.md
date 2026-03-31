@@ -1,4 +1,4 @@
-# ⚡ ANSHHOSTING — Cloud Hosting Platform
+# ⚡ SPARSHHOSTING — Cloud Hosting Platform
 
 A full-featured web hosting panel similar to Railway/Heroku.  
 Deploy Python and Node.js apps directly from your browser.
@@ -30,7 +30,7 @@ http://localhost:5000
 
 ## 📁 Project Structure
 ```
-anshhosting/
+SPARSHHOSTING/
 ├── app.py              ← Main Flask application
 ├── users.json          ← User database
 ├── projects.json       ← Project database
@@ -79,7 +79,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "Hello from ANSHHOSTING!"
+    return "Hello from SPARSHHOSTING!"
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5001))
@@ -102,7 +102,7 @@ const port = process.env.PORT || 3000;
 
 const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.end('Hello from ANSHHOSTING!\n');
+  res.end('Hello from SPARSHHOSTING!\n');
 });
 
 server.listen(port, () => {
@@ -121,7 +121,7 @@ sudo apt install python3 python3-pip python3-venv nodejs npm -y
 
 # Clone / copy project
 cd /opt
-# Copy anshhosting folder here
+# Copy SPARSHHOSTING folder here
 
 # Install deps
 pip3 install -r requirements.txt

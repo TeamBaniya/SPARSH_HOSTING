@@ -161,7 +161,7 @@ def load_projs():
     if changed: _save(PROJS_FILE, data)
     return data
 
-hash_pw = lambda pw: hashlib.sha256((pw + 'anshhosting_salt_v4').encode()).hexdigest()
+hash_pw = lambda pw: hashlib.sha256((pw + 'SPARSHHOSTING_salt_v4').encode()).hexdigest()
 allowed = lambda fn: '.' in fn and fn.rsplit('.',1)[1].lower() in ALLOWED_EXT
 
 def free_port():
@@ -998,7 +998,7 @@ def _seed_admin():
     for u in users.values():
         if u.get('is_admin'): return
     uid = str(uuid.uuid4())
-    users[uid] = {'id':uid,'username':ADMIN_USERNAME,'email':'admin@anshhosting.local',
+    users[uid] = {'id':uid,'username':ADMIN_USERNAME,'email':'admin@SPARSHHOSTING.local',
                   'password':hash_pw(ADMIN_PASSWORD),'is_admin':True,'plan':'admin',
                   'plan_expiry':None,'created_at':datetime.now().isoformat()}
     save_users(users)
@@ -1011,7 +1011,7 @@ if __name__ == '__main__':
         if not os.path.exists(fp): _save(fp, {})
     _seed_admin()
     print('╔═══════════════════════════════════════════╗')
-    print('║    ⚡  ANSHHOSTING v4.1 — SECURE           ║')
+    print('║    ⚡  SPARSHHOSTING v4.1 — SECURE           ║')
     print('╠═══════════════════════════════════════════╣')
     print(f'║  URL     → http://0.0.0.0:5000            ║')
     print(f'║  Admin   → {ADMIN_USERNAME} / {ADMIN_PASSWORD:<28}║')

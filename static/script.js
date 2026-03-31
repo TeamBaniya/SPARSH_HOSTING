@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════
-   ANSHHOSTING v4.1 — Frontend JS
+   SPARSHHOSTING v4.1 — Frontend JS
    Dev: AnshAPI · t.me/crystaapi
 ═══════════════════════════════════════════════════════════ */
 
