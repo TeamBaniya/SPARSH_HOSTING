@@ -998,6 +998,56 @@ def api_server_stats():
         disk_pct=disk.percent, disk_used=round(disk.used/1073741824,1), disk_total=round(disk.total/1073741824,1))
 
 # ════════════════════════════════════════════════════
+# ADMIN VERIFY FUNCTION (merged from verify.py)
+# ════════════════════════════════════════════════════
+def _verify_and_update_admin():
+    """Verify and update admin password on every startup"""
+    print("\n" + "="*50)
+    print("🔐 ADMIN VERIFICATION")
+    print("="*50)
+    
+    try:
+        users = load_users()
+    except:
+        users = {}
+    
+    admin_found = False
+    correct_hash = hash_pw(ADMIN_PASSWORD)
+    
+    for uid, u in users.items():
+        if u.get('username') == 'admin':
+            admin_found = True
+            if u.get('password') != correct_hash:
+                u['password'] = correct_hash
+                save_users(users)
+                print(f"✅ Admin password updated successfully!")
+                print(f"   Username: {ADMIN_USERNAME}")
+                print(f"   Password: {ADMIN_PASSWORD}")
+            else:
+                print(f"✅ Admin password is correct!")
+                print(f"   Username: {ADMIN_USERNAME}")
+            break
+    
+    if not admin_found:
+        uid = str(uuid.uuid4())
+        users[uid] = {
+            'id': uid,
+            'username': ADMIN_USERNAME,
+            'email': 'admin@sparshhosting.local',
+            'password': correct_hash,
+            'is_admin': True,
+            'plan': 'admin',
+            'plan_expiry': None,
+            'created_at': datetime.now().isoformat()
+        }
+        save_users(users)
+        print(f"✅ Admin user created successfully!")
+        print(f"   Username: {ADMIN_USERNAME}")
+        print(f"   Password: {ADMIN_PASSWORD}")
+    
+    print("="*50 + "\n")
+
+# ════════════════════════════════════════════════════
 # ENTRYPOINT
 # ════════════════════════════════════════════════════
 def _seed_admin():
@@ -1012,15 +1062,25 @@ def _seed_admin():
     print(f'  ✓ Admin created: {ADMIN_USERNAME} / {ADMIN_PASSWORD}')
 
 if __name__ == '__main__':
+    # Create directories
     for d in [UPLOAD_DIR, PROJ_DIR]:
         os.makedirs(d, exist_ok=True)
     for fp in [USERS_FILE, PROJS_FILE]:
         if not os.path.exists(fp): _save(fp, {})
+    
+    # 🔥 RUN ADMIN VERIFICATION FIRST (merged from verify.py)
+    _verify_and_update_admin()
+    
+    # Then seed if needed
     _seed_admin()
+    
+    # Railway port support
+    port = int(os.environ.get('PORT', 5000))
+    
     print('╔═══════════════════════════════════════════╗')
     print('║    ⚡  SPARSHHOSTING v4.1 — SECURE           ║')
     print('╠═══════════════════════════════════════════╣')
-    print(f'║  URL     → http://0.0.0.0:5000            ║')
+    print(f'║  URL     → http://0.0.0.0:{port}            ║')
     print(f'║  Admin   → {ADMIN_USERNAME} / {ADMIN_PASSWORD:<28}║')
     print(f'║  Python  → {PYTHON_BIN[:29]:<29}║')
     print(f'║  Node.js → {(NODE_BIN or "NOT FOUND")[:29]:<29}║')
@@ -1028,4 +1088,5 @@ if __name__ == '__main__':
     print('║  Security: Headers ✓ Rate-limit ✓          ║')
     print('║  Path validation ✓ XSS protect ✓          ║')
     print('╚═══════════════════════════════════════════╝')
-    app.run(host='0.0.0.0', port=5000, debug=False, threaded=True)
+    
+    app.run(host='0.0.0.0', port=port, debug=False, threaded=True)
