@@ -45,7 +45,7 @@ else:
     # Fallback: standard cookie sessions with safe config
     app.config['SESSION_COOKIE_HTTPONLY'] = True
     app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
-    app.config['SESSION_COOKIE_NAME']     = 'ansh_session'
+    app.config['SESSION_COOKIE_NAME']     = 'sparsh_session'
     app.config['SESSION_COOKIE_PATH']     = '/'
     app.config['SESSION_COOKIE_DOMAIN']   = None
     app.config['SESSION_COOKIE_SECURE']   = False
@@ -605,7 +605,14 @@ def login():
                 session.modified = True
                 # Clear attempts
                 _login_attempts.pop(ip, None)
-                return redirect(url_for('dashboard'))
+                
+                # 🔥 FIXED: Admin ko admin panel, normal user ko dashboard
+                if session['is_admin']:
+                    flash('Welcome Admin!', 'success')
+                    return redirect(url_for('admin'))
+                else:
+                    return redirect(url_for('dashboard'))
+                    
         record_attempt(ip)
         rem = remaining_attempts(ip)
         flash(f'Invalid credentials. {rem} attempts remaining.','error')
