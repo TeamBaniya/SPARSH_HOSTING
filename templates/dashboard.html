@@ -63,7 +63,7 @@
             <div class="pfill" style="width:{{ [(pi.disk_used/pi.storage_mb*100)|round|int,100]|min }}%;background:{% if pi.disk_used/pi.storage_mb > 0.85 %}var(--c2){% else %}var(--c4){% endif %}"></div>
           </div>
           <div class="stat-sub" style="margin-top:4px">
-            {% if pi.plan=='free' %}<a href="https://t.me/crystaapi" target="_blank" style="color:var(--c0);text-decoration:none">Upgrade ↗</a>{% else %}{{ pi.label }}{% endif %}
+            {% if pi.plan=='free' %}<a href="https://t.me/sparshhosting" target="_blank" style="color:var(--c0);text-decoration:none">Upgrade ↗</a>{% else %}{{ pi.label }}{% endif %}
           </div>
         </div>
       </div>
