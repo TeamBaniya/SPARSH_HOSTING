@@ -175,10 +175,10 @@ async function manualInstall(pid) {
   const pkgs = document.getElementById('pkg-input').value.trim();
   if (!pkgs) { toast('Enter package names first.','err'); return; }
   try {
-    const d = await (await fetch(`/api/project/${pid}/install`,{
+    await fetch(`/api/project/${pid}/install`,{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({packages:pkgs})
-    })).json();
+    });
     toast('Installing packages in background — check terminal logs.','info');
   } catch(e) { toast('Install failed: '+e.message,'err'); }
 }
@@ -212,5 +212,41 @@ async function gitPull(pid) {
     toast(d.status==='pulled' ? '✅ Git pull successful!' : '❌ Git pull failed — check terminal.', d.status==='pulled'?'ok':'err');
   } catch(e) { toast('Error: '+e.message,'err'); }
 }
+
+// 🔥 DELETE PROJECT FUNCTION
+async function delProject(pid, name) {
+    if (!confirm(`⚠️ Delete project "${name}"?\n\nAll files and data will be permanently deleted. This cannot be undone!`)) return;
+    
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '⏳ Deleting...';
+    btn.disabled = true;
+    
+    try {
+        const response = await fetch(`/project/${pid}/delete`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        
+        if (response.ok) {
+            toast('✅ Project deleted successfully!', 'success');
+            setTimeout(() => {
+                window.location.href = "{{ url_for('dashboard') }}";
+            }, 1200);
+        } else {
+            const data = await response.json();
+            toast('❌ Delete failed: ' + (data.error || 'Unknown error'), 'error');
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    } catch(e) {
+        toast('❌ Network error: ' + e.message, 'error');
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }
+}
 </script>
-</body></html>
+</body>
+</html>
